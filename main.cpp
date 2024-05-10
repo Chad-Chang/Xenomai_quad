@@ -469,11 +469,11 @@ static void *realtime_thread(void *arg)
         posRW_err_old = K_RL.get_posRW_error(1);
 
         /****************** Conrtoller ******************/
-        RL_output[0] = c.posPID(posRW_err, posRW_err_old, 0, 0);
-        RL_output[1] = c.posPID(posRW_err, posRW_err_old, 1, 0);
+        RL_output[0] = c.posPID(posRW_err, posRW_err_old, 0, 0); // R방향 force
+        RL_output[1] = c.posPID(posRW_err, posRW_err_old, 1, 0); // thteta 방향 force
 
         /****************** Put the torque in Motor ******************/
-        RL_control_input = JTrans_RL * RL_output;
+        RL_control_input = JTrans_RL * RL_output; // biarticular ipnut torque vector
 
         /****************** Data send to ELMO ******************/
         RLHIP.DATA_Send(out_twitter_GTWI);
@@ -493,8 +493,8 @@ static void *realtime_thread(void *arg)
         //
 
         // 11-6. Sync data with GUI thread
-        _M_motor_torque[0] = RL_control_input[0];
 
+        // mutex_trylock : 
         if(!pthread_mutex_trylock(&data_mut))
         {
             _M_sampling_time_ms = sampling_ms; //when the thread get the mutex, write data into shared global variables
@@ -502,8 +502,8 @@ static void *realtime_thread(void *arg)
 
             _M_Ecat_WKC = wkc;
             _M_Ecat_expectedWKC = expectedWKC;
-            _M_motor_torque[0] = RL_control_input[0];
-            _M_motor_torque[1] = RL_control_input[1];
+            _M_motor_torque[0] = RL_control_input[1] - RL_control_input[0]; // theta 1
+            _M_motor_torque[1] = RL_control_input[0]; // theta 2
 
             pthread_mutex_unlock(&data_mut);
         }

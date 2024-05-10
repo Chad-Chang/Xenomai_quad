@@ -5,9 +5,10 @@ Controller::Controller()
 
 }
 
-double Controller::posPID(Vector2d posRW_err, Vector2d posRW_err_old, int idx,
+double Controller::posPID(Vector2d posRW_err, Vector2d posRW_err_old, int idx, 
                           int Leg_num) // posRW_err, posRW_err_old 이라는 주소값을 받겠다. PID 제어를 r,th둘다 해야하는데 하나의 함수로 하기위해,
-                                       // idx라는 int변수에 0을 넣으면 r에대한것, 1을 넣으면 th에 대한 PID 제어기가 된다.
+                                       // idx라는 int변수에 0을 넣으면 r에대한것, 1을 넣으면 th에 대한 PID 제어기가 된다. 
+                                      // RW force output
 {
   kp = get_posPgain(Leg_num, idx);
   ki = get_posIgain(Leg_num, idx);

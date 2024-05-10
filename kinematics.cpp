@@ -11,13 +11,13 @@ Kinematics::Kinematics(double thm, double thb, int Leg_num) {
   Jacobian = L * Jacobian;
   JacobianTrans = Jacobian.transpose();
 
-  posRW[0] = 2 * L * cos((thb - thm) / 2);
+  posRW[0] = 2 * L * cos((thb - thm) / 2); // biarticular -> RW변환 
   posRW[1] = 0.5 * (thm + thb);
 
   r_posRW[Leg_num] = posRW[0];
   th_posRW[Leg_num] = posRW[1];
 }
-
+//asdfasf
 void Kinematics::set_DelayDATA() {
   for (int i = 0; i < 2; i++) //[i][0] = z^0, [i][1] = z^1 ...
   {
@@ -27,6 +27,9 @@ void Kinematics::set_DelayDATA() {
     velRW_error[i][1] = velRW_error[i][0];
   }
 }
+
+
+
 
 void Kinematics::exchange_mutex() {
   if (!pthread_mutex_trylock(&data_mut)) {
